@@ -2,6 +2,55 @@ class Solution {
 public:
     vector<int> maxSumOfThreeSubarrays(vector<int>& nums, int k) {
         
+        //basically the idea is here to store the win sum for every such starting at ind i
+        //and then maintain left and right largest windows, depicting at i the window ind on l/r
+        //of it and max in it
+        //then performing a complete search storing the max combination for interval windows.
+        
+        vector<int> win(nums.size()-k+1);
+        int sum =0;
+        for(int i=0;i<nums.size();i++)
+        {
+            sum += nums[i];
+            if(i>k-1)//we can delete the first element of existing window
+                sum-=nums[i-k];
+            if(i>k-2)//on a zero scaled index we can now store win sum vals
+                win[i-(k-1)]=sum;
+        }
+        
+        //populating the left array at any index i contains index of largest sum window on it's left
+        int j=0;
+        vector<int>left(win.size());
+        for(int i=0;i<win.size();i++)
+        { 
+            if(win[i]>win[j])j=i;
+            left[i]=j;
+        }
+        
+        j=win.size()-1;
+        vector<int>right(win.size());
+        for(int i=win.size()-1;i>-1;i--)
+        {
+            if(win[i]>=win[j])j=i;//>= because we need lexicographically smallest
+            right[i]=j;
+        }
+        vector<int> max(3,-1);
+        
+        for(int b=k;b<win.size()-k;b++)
+        {
+            int a = left[b-k];
+            int c= right[b+k];//notice that < sign there
+            if(max[0]==-1 || win[a]+win[b]+win[c]>win[max[0]] + win[max[1]] + win[max[2]])
+                            max[0]=a,max[1]=b,max[2]=c;
+        }
+        return max;
+    }
+};
+
+class Solution {
+public:
+    vector<int> maxSumOfThreeSubarrays(vector<int>& nums, int k) {
+        
         vector<int> win(nums.size()-k+1);
         int sum = 0;
         for(int i=0;i<nums.size();i++)
