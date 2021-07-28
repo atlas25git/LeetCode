@@ -1,92 +1,78 @@
 class Solution {
 public:
-    string addStrings(string num1, string num2) {
+    vector<string> restoreIpAddresses(string s) {
+        //Approach:
+        //here we are resorting for a full search with back tracking for the given false checks.
+        //We maintain a common iterator in the string, and for each we check all the possible
+        //string sets of size <=3, this however checks for validity at index out of bound
+        //when segments become>4 we backtrack, and when n string len that is entire string has been
+        //traversed thus we then check if seg condn is satisfied, and thus store it as viable sol.
         
-        int n1 = num1.size();
-        int n2 = num2.size();
-        int carr = 0;
-        stack<int> st;
-        
-        while(n1>-1 || n2>-1)
-        {
-            int n11 = n1<0?0:num1[n1--] - '0';
-            int n22 = n2<0?0:num2[n2--] - '0';
-            int res = Add(n11,n22,carr);
-            //cout<<res<<endl;
-            if(res>=0)st.push(res);
-        }
-        
-        if(carr>0)st.push(carr);    
-        string sum = "";
-        while(!st.empty())
-        {
-            sum += to_string(st.top());
-            st.pop();
-        }
-        return sum;
+        vector<string> res;
+        if(s.size())
+            fill(0,0,res,s,"");
+        return res;
     }
     
-    int Add(int a,int b,int& carr)
+    void fill(int ind, int seg, vector<string>& res, string s,string cip)
     {
-        int sum = a+b+carr;
-        
-        if(sum<10)
-        {  
-           carr = 0; 
-           return sum;
+        if(seg>4)return;
+        if(ind == s.size())
+        {
+            if(seg == 4)
+                res.push_back(cip);
         }
-        else {
-            carr = sum/10;
-            return sum%10;
+        
+        //search begins
+        //for each ind in [0,s.size) we check for all valid strings starting from this of len [1,3]
+        for(int i=1; i<=3 && i+ind <= s.size();i++)
+        {
+            string cur = s.substr(ind,i);
+            //basically coz we're considering for every poss 3 lettered seg
+            string dot = ind==0?"":".";
+            
+            //backTrack
+            if(cur.size()>1 && cur[0]=='0')return;
+            if(stoi(cur)>255)return;
+            
+            //fn call
+            fill(ind+i,seg+1,res,s,cip+dot+cur);
+            
+            
         }
     }
     
 };
 
 
+
 class Solution {
 public:
-    string addStrings(string num1, string num2) {
-        
-        int i=0,j=0;
-        int sum=0,carr=0;
-        string res = "";
-        reverse(num1.begin(),num1.end());
-        reverse(num2.begin(),num2.end());
-        
-        for(i=0,j=0;num1[i] && num2[j]; i++,j++)
-        {
-            int n1 = num1[i]-'0';
-            int n2 = num2[j]-'0';
-            int pd = n1+n2+carr;
-            if(pd>9)
-                carr = (n1+n2+carr)/10;
-            int digit = pd%10;
-            
-//             if(carr)
-//             {
-//                 digit = (n1+n2+carr)%10;
-//                 carr  = digit/10;
-                
-//             }
-            
-            res += to_string(digit);
-        }
-        //cout<<i<<" "<<j;
-        if(i<num1.length())
-        {   //cout<<"I";
-            string rem = num1.substr(i,num1.size());
-            int x = stoi(rem);
-            
-            res += rem;
-        }
-        if(j<num2.length())
-        {   //cout<<"J";
-            string rem = num2.substr(j,num2.size());
-            res += rem;
-        }
-        reverse(res.begin(),res.end());
-        return res;
-        
+    vector<string> restoreIpAddresses(string s) {
+            vector<string> ips;
+        if(!s.size())return ips;
+        getIps(0,0,"",s,ips);
+        return ips;
     }
+    
+    void getIps(int n,int seg,string ip,string s,vector<string>& ips)
+    {
+        if(seg>4)return;
+        if(n==s.length())
+        {
+            if(seg==4)ips.push_back(ip);
+            return;
+        } 
+        for(int i=1;i<=3 && i+n <= s.length(); i++)
+        {   //i spans in 1,2,3 as they are valid lens for a comp.
+            string cur = s.substr(n,i);
+            string dot = n==0?"":".";
+            
+            if(cur.length()>1 && cur[0] == '0')return;
+            if(stoi(cur) > 255)return;
+            
+            getIps(n+i,seg+1,ip+dot+cur,s,ips);
+        }
+    }
+    
 };
