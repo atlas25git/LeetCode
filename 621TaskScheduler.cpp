@@ -1,21 +1,27 @@
-public class Solution {
-    public int LeastInterval(char[] tasks, int n) {
-        var counts = new int[26];
+class Solution {
+public:
+    int leastInterval(vector<char>& tasks, int n) {
         
-        foreach(var task in tasks) {
-            counts[task - 'A']++;
+        vector<int> count(26);
+        for(auto x: tasks)count[x-'A']++;
+        
+        sort(count.begin(),count.end());
+        
+        int fmax = count[25];
+        int idle = (fmax-1)*n;
+        
+        for(int i=count.size()-2;i>-1;i--)
+        {
+            if(idle<0)return tasks.size();
+            if(fmax-1>count[i])
+                idle-=count[i];
+            //the time which rate determiner would require
+            //-1 because it'll have n-1 b/w n subsequent executions
+            //others will accomodate in b/w but this one won't
+            else idle -= fmax -1;
         }
-        
-        Array.Sort(counts);
-        
-        var fmax = counts[counts.Length - 1];
-        var idle = (fmax - 1) * n;
-        
-        for(int i = counts.Length - 2; i >= 0; i--) {
-            if(idle < 0) return tasks.Length;
-            
-            idle -= Math.Min(counts[i], fmax - 1);
-        }
-        
-        return idle + tasks.Length;
+        // int j(0);
+        // cout<<j<<endl;
+        return idle+tasks.size();
     }
+};
