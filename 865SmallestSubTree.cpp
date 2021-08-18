@@ -16,8 +16,13 @@ public:
         //traversal to get the deepest leaves
         //while traversing the tree nodes we store each one's
         //parent in a hashMap
-        //for the leaves array we maintain a set which is used to keep unique ancestors
-        //of just a lvl above, and we do this till we find one single parent.
+        //We keep a leaves vector which we clear on every iteration of bfs
+        //thus it culminates with just the leave nodes, the last level
+        //now these could be from more than one parent, and thus we aim to
+        //get their ancestor, hence alternatively, we store parents of leaves in leaves vector
+        //in a set, and thus transfer them to leaves array and re run the iteration,
+        //this continues till there is just one node present, and thus we've found
+        //the acestor.
         
         unordered_map<TreeNode*,TreeNode*> map;
         queue<TreeNode*> q;
