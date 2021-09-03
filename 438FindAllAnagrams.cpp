@@ -1,25 +1,27 @@
 class Solution {
 public:
     vector<int> findAnagrams(string s, string p) {
-        vector<int> pv(26,0),sv(26,0),res;
-        if(s.size() < p.size())return res;
-        
+        //basically the idea here is to maintain a window 
+        //of frequency signature, and move it across the string,
+        //to discern all the occurrings of the patterns.
+       
+        vector<int> res;
+        if(s.size()<p.size())return res;
+        vector<int>sc(26,0),pc(26,0);
         for(int i=0;i<p.size();i++)
         {
-            ++pv[p[i]-'a'];
-            ++sv[s[i]-'a'];
+            sc[s[i]-'a']++;
+            pc[p[i]-'a']++;
         }
-        if(pv == sv)res.push_back(0);
-        
-        for(int i=p.size();i<s.size();++i)
+        if(sc==pc)res.push_back(0);
+        for(int i=p.size();i<s.size();i++)
         {
-            ++sv[s[i]-'a'];
-            --sv[s[i-p.size()]-'a'];
-            if(pv==sv)
-                res.push_back(i-p.size()+1);
+            sc[s[i]-'a']++;
+            sc[s[i-p.size()]-'a']--;
+            if(sc==pc)res.push_back(i-p.size()+1);
         }
         return res;
-    }   
+    }
 };
 
 class Solution {
