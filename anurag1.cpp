@@ -12,15 +12,23 @@ using namespace std;
 const int mod = 1e9 + 7;
 const int N = 100005, M=22;
 void solve(){
-    int i,j,k,n,m,ans=0,cnt=0,sum=0;
-        int n1,n2,x;
-        cin>>n1>>n2>>x;
-        if(n1>n2)cout<<-1<<endl;
+    int i,j,n,m,ans=0,cnt=0,sum=0;
+        // cout<<"op"<<endl;
+        string s;
+        const char* k;
+        getline(cin,s);
 
-        int df = n2-n1;
-        ans = x/df;
-        cout<<ans+1<<endl;
-    
+        stringstream ss(s);
+        
+        // k = s.c_str();
+
+        auto tok = strtok((char*)s.c_str(),",");
+        cout<<typeid(tok).name()<<endl;
+        while(tok)
+        {
+            cout<<tok<<" ";
+            tok = strtok(0,",");
+        }
 }
 void init() {
     ios_base:: sync_with_stdio(false);
