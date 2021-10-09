@@ -1,5 +1,35 @@
 class Solution {
 public:
+    // map<pair<int,int>,int> memo;
+    int offset = 0;
+    vector<vector<int>> dp;
+    int findTargetSumWays(vector<int>& nums, int target) {
+     
+        for(auto x: nums)offset+=x;
+        dp.resize(nums.size()+1,vector<int>(2*offset+1,INT_MIN));
+        
+        
+        
+        
+        return dp[nums.size()][offset+];//recft(nums,target,0,0);
+    }
+    
+    int recft(vector<int>& nums, int target,int i,int sum)
+    {
+        if(i==nums.size())
+        {
+            if(target == sum)return 1;
+            else return 0;
+        }
+        // if(memo.count({i,sum}))return memo[{i,sum}];
+           if(dp[i][offset + sum]!=INT_MIN)return dp[i][offset+sum];
+
+        return dp[i][offset + sum] = recft(nums,target,i+1,sum+nums[i]) + recft(nums,target,i+1,sum-nums[i]);
+    }
+};
+
+class Solution {
+public:
     
     vector<vector<int>> dp;
     int offset = 0;
