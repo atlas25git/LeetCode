@@ -1,6 +1,9 @@
+
+
 class Solution {
 public:
-    int minSteps(int n) {
+    unordered_map<string,int> memo;    
+    int minSteps1(int n) {
         //dp[i] denotes min operations needed to perform in need to produce i*a
         //now we discern the sequence of operations, it'd end at P
         //and there must be some C in b/w so as to produce the sequence
@@ -15,14 +18,36 @@ public:
         //and since we want the number of operations be integral thus we check if i is divisor of k
         
         //Recurrence:
-        //dp[i] = min(dp[j] + (j-k)/k + 1) where 1<=i<k && k%i==0
+        //dp[i] = min(dp[j] + (i-j)/j + 1) where 1<=i<k && i%j==0
          
         vector<int> dp(n+1,INT_MAX);
-        dp[1] = 0;
-        for(int k=2;k<=n;k++)
-            for(int i=1;i<k;i++)
-                if(!(k%i))
-                dp[k] = min(dp[k],dp[i] + (k-i)/i + 1);
+        dp[1]=0;
+        for(int i=2;i<=n;i++)
+            for(int j=1;j<=i;j++)
+                if(i%j == 0)
+                    dp[i] = min(dp[i],dp[j] + 1 + (i-j)/j);
         return dp[n];
+    }
+    
+    
+    
+        int minSteps( int n ) 
+        {   if(n==1)return 0;
+            return cnt(1,n,1)+1;
+        }
+    
+    int cnt(int i,int n,int l)
+    {
+        
+        if(i>n)return 1e9;
+        
+        if(!(n-i))return 0;
+        if(memo.count(to_string(i) + " " + to_string(l)))
+           return memo[to_string(i) + " " + to_string(l)];
+        
+        int C = 2 + cnt(2*i,n,i);
+        int P = 1 + cnt(i + l,n,l);
+        
+        return memo[to_string(i) + " " + to_string(l)] =  min(C,P);
     }
 };
