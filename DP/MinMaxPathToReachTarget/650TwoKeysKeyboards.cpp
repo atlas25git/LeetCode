@@ -29,25 +29,24 @@ public:
         return dp[n];
     }
     
-    
-    
-        int minSteps( int n ) 
-        {   if(n==1)return 0;
-            return cnt(1,n,1)+1;
-        }
-    
-    int cnt(int i,int n,int l)
+    int minSteps(int n)
     {
-        
-        if(i>n)return 1e9;
-        
-        if(!(n-i))return 0;
-        if(memo.count(to_string(i) + " " + to_string(l)))
-           return memo[to_string(i) + " " + to_string(l)];
-        
-        int C = 2 + cnt(2*i,n,i);
-        int P = 1 + cnt(i + l,n,l);
-        
-        return memo[to_string(i) + " " + to_string(l)] =  min(C,P);
+        if(n==1)return 0;
+        //We've to offset the number of minimal operations by 1 as initially we're 
+        //assuming that we coppied 1 A, to keep it in the buffer or else the paste 
+        //procedure won't work
+        return steps(1,n,1)+1;
     }
+    
+    int steps(int current,int total,int buffer)
+    {   
+        if(current>total)return 1e9;
+        if(current == total)return 0;
+        
+        int C = 2 + steps(2*current,total,current);
+        int P = 1 + steps(current + buffer,total,buffer);
+        
+        return min(C,P);
+    }
+     
 };

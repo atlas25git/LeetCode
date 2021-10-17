@@ -9,6 +9,9 @@ public:
         //substituting sum-s2-s2>=0
         //sum-2*s2>=0 should be as close to zero as it could be
         //for this we need to divise maximum sum that could be made bounded by sum/2'
+        //Now This basically gets reduced to a 0/1 knapsack problem
+        //to make a opimal sum from n elements as given
+        //and don't confuse it with number of ways problem, as ways to make 0 sum using 0 elements.
         int n = stones.size();
         int total=0;
         for(auto x: stones)total+=x;
