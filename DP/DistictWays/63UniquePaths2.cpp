@@ -12,7 +12,7 @@ public:
     }
     
     
-    
+    //dfs
     int rec(int i,int j,vector<vector<int>>& grid)
     {
         if(i<0 || j<0 || j>=n || i>=m)return 0;
@@ -25,7 +25,7 @@ public:
         
         if(og[0][0] == 1)return 0;
         vector<vector<int>> dp(og.size()+1,vector<int>(og[0].size()+1,0));
-       // dp[0][1] = 1;
+       dp[0][1] = 0;//since for the first cell there's only one way to reach there.
        dp[1][0] = 1; 
         for(int i=1;i<=og.size();i++)
             for(int j=1;j<=og[0].size();j++)
