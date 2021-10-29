@@ -26,7 +26,8 @@ public:
         // if(memo.count({i,sum}))return memo[{i,sum}];
            if(dp[i][offset + sum]!=INT_MIN)return dp[i][offset+sum];
 
-        return dp[i][offset + sum] = recft(nums,target,i+1,sum+nums[i]) +                                                       recft(nums,target,i+1,sum-nums[i]);
+        return dp[i][offset + sum] = 
+                recft(nums,target,i+1,sum+nums[i]) +                                                                                     recft(nums,target,i+1,sum-nums[i]);
     }
     
     int findTargetSumWays(vector<int>& nums, int target){
@@ -39,6 +40,10 @@ public:
         //this is a demonstration of discontinuous dp;
         for(int i=0;i<n;i++)
             for(auto &p: dp[i]){
+                //here p.first -> is the initial sum which was present
+                //with it we're creating sum that'd be formed with +/- of item in consideration
+                //and thus we'll check all in all how many such combinations are possible
+                //by mapping it's frequency to the sum
                 dp[i+1][p.first + nums[i]] += p.second;
                 dp[i+1][p.first - nums[i]] += p.second;
             }
