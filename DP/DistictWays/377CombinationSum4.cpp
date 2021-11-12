@@ -1,44 +1,55 @@
 class Solution {
 public:
-    int combinationSum41(vector<int>& nums, int target) {
-        vector<unsigned>dp(target+1,0);
-        dp[0] = 1;
+    bool canPartition1(vector<int>& nums) {
+        int sum=0;
+        for(auto x: nums)sum+=x;
+        if(sum&1)return false;
         
-        for(int i=1;i<=target;i++)
-            for(int j=0;j<nums.size();j++)
-                if(nums[j]<=i)
-                    dp[i] += dp[i-nums[j]];
-             
-        return dp[target];
+        vector<vector<bool>>dp(2,vector<bool>(sum+1,false));
+        //now we'll see if we can fill up the knapsack with given elements
+        //to a capacity of sum/2.
+        for(int i=0;i<=nums.size();i++)
+            for(int j=0;j<=sum;j++)
+                if(!j)
+                    dp[i%2][j]=true;
+                else if(!i)
+                    dp[i%2][j]=false;
+                else if(nums[i-1]<=j)
+                    //cases of excluding and including the items.
+                    //we're checking for the sum j if it is possible
+                    //to make a subset adding up to that value using
+                    //i elements, case 1 being including i, hence we'll check the,
+                    //state space for {i-1} elements and a sum of(j-[i'th] element).
+                    //and case 2 being excluding i.
+                    dp[i%2][j] = dp[(i+1)%2][j] || dp[(i+1)%2][j-nums[i-1]];
+                else 
+                    dp[i%2][j] = dp[(i+1)%2][j];                
+        
+        return dp[1][sum/2];
     }
-    unordered_map<int,int> memo;
-    int combinationSum4(vector<int>& nums, int target)
-    {
-        return ways2(nums,target,nums.size());
+    vector<vector<int>>memo;
+    
+    bool canPartition(vector<int>& nums){
+        
+        memo.resize(20001,vector<int>(201,0));
+        int sum=0;
+        for(auto x: nums)sum+=x;
+        if(sum&1)return false;
+        return fill(sum/2,nums,nums.size());
     }
     
-    int ways(vector<int>& nums, int target)
-    {
-        if(target<0)return 0;
-        if(target == 0)return 1;
-        if(memo.count(target))return memo[target];
-        int res = 0;
+    bool fill(int sum,vector<int>& nums,int n){
+        if(sum == 0)
+            return true;
+        if(n<=0 || sum<0)
+            return false;
+        if(memo[sum][n])
+            return memo[sum][n]==2?1:0;
+        bool exc = fill(sum,nums,n-1);
+        bool inc = fill(sum-nums[n-1],nums,n-1);
         
-        for(int i=0;i<nums.size();i++)
-            res += ways(nums,target-nums[i]);
-        
-        return memo[target] = res;
-    }
-    int ways2(vector<int>& nums,int target,int n)
-    {   
-        if(target == 0)return 1;
-        if(n==0) return 0;
-        
-        int res = 0;
-        res += ways2(nums,target,n-1);
-        if(nums[n-1]<=target)
-            res += ways2(nums,target-nums[n-1],n);
-        
-        return res;
+        int res = (exc || inc)?2:1;
+        memo[sum][n] = res;
+        return exc || inc;
     }
 };
