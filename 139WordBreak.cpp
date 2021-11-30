@@ -1,62 +1,41 @@
+//The answer is stored at dp[0], and while computing it builds solution in top down manner
+//starting from ind = 0, it looks up for first word that is in dict and hence makes a call
+//for the remaining string, once i == s.size() : means the string could be partitioned
+
 class Solution {
-public:
-    bool wordBreak(string s, vector<string>& wD) {
-        unordered_set<string> words(wD.begin(),wD.end());
-        int n = s.size();
-        //our approach here is to maintain a marker boolean array
-        //corressponding to each of the string's char, thus it'll hold true
-        //if it could be partitioned at that index with a space
-        //running a full search loop, for every index i{1,n-1}
-        //j {0,i-1}, it will check for the dp[j] true values
-        //and thus will fill up the array
-        
-        vector<bool> dp(n+1,0);
+    unordered_set<string> dict;
+    string s;
+    vector<bool> dp;
+    public:
+    bool wordBreak(string s1, vector<string>& wordDict) {
+        unordered_set<string> d(wordDict.begin(),wordDict.end());
+        swap(dict,d),swap(s,s1);
+        dp.resize(s.size()+1,0);
+        //bottom up
         dp[0] = 1;
-        
-        for(int i=1;i<=n;i++)
+        for(int i=1;i<=s.size();i++)
+        {
             for(int j=i-1;j>-1;j--)
             {
                 if(dp[j])
                 {
-                    if(words.count(s.substr(j,i-j)))
-                    {
-                        dp[i]=1;
-                        //breaking the innner loop here as we just need to discern
-                        //if partition is possible or not.
-                        break;
-                    }
-                }
-            }
-        
-        return dp[n];
-        
-    }
-};
-
-
-class Solution {
-public:
-    bool wordBreak(string s, vector<string>& wordDict) {
-        
-        unordered_set<string> words(wordDict.begin(),wordDict.end());
-        int n=s.size();
-        
-        vector<int> dp(n+1,0);
-        dp[0]=1;
-        
-        for(int i=1;i<=n;i++)
-        {
-            for(int j=i-1;j>=0;j--){
-                if(dp[j]){
-                    if(words.count(s.substr(j,i-j)))
-                    {
-                        dp[i]=1;
-                        break;
-                    }
+                    dp[i] =dp[i] || dict.count(s.substr(j,i-j));
+                    // if(dp[i])
+                    // break;
                 }
             }
         }
-        for(auto x: dp)cout<<x<<" "<<endl;
-        return dp[n];
+        return dp.back();
+        // return work(0);
+    }
+    
+    bool work(int ind)
+    {
+        if(ind == s.size())return 1;
+        if(dp[ind] != -1)return dp[ind];
+        string sub;
+        for(int i=ind;i<s.size();i++)
+            if(dict.count(sub+=s[i]) && work(i+1))return dp[ind]=1;
+        return dp[ind] = 0;
     }
 };
